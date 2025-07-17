@@ -1,13 +1,14 @@
 import { Hono } from 'hono';
-import api from './api';
+import books from './books';
 
 const app = new Hono();
 
+// `/api`
 app
   .get('/', (c) => {
     return c.json('Hello Hono!');
   })
-  .route('/api', api);
+  .route('/books', books);
 
 export default app;
 // export type Apptype = typeof route
