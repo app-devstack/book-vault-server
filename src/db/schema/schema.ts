@@ -21,6 +21,16 @@ const _schemaBase = {
     .$defaultFn(() => new Date()),
 };
 
+export const user = sqliteTable('user', {
+  ..._schemaBase,
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: integer('email_verified', { mode: 'boolean' })
+    .$defaultFn(() => false)
+    .notNull(),
+  image: text('image'),
+});
+
 // シリーズマスタ
 export const series = sqliteTable('series', {
   ..._schemaBase,

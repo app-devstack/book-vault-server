@@ -1,18 +1,15 @@
-// import schema from '@/db/schema';
-// import { DrizzleConfig } from 'drizzle-orm';
-// import { drizzle } from 'drizzle-orm/expo-sqlite';
-// import { openDatabaseSync } from 'expo-sqlite';
+import schema from '@/db/schema';
+import { DrizzleConfig } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/d1';
 
-// /** The name of the database file to open. */
-// export const DATABASE_NAME = 'db.db';
+/** The name of the database file to open. */
 
-// const options = {
-//   casing: 'snake_case' as const,
-//   schema: { ...schema },
-//   logger: true,
-// } satisfies DrizzleConfig<typeof schema>;
+const options = {
+  casing: 'snake_case' as const,
+  schema: { ...schema },
+  logger: true,
+} satisfies DrizzleConfig<typeof schema>;
 
-// const expo = openDatabaseSync(DATABASE_NAME, { enableChangeListener: true });
-// const db = drizzle(expo, options);
+const db = drizzle({} as Env['DB'], options);
 
-// export default db;
+export default db;
