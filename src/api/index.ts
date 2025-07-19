@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import books from './books';
 import users from './users';
+import backup from './backup';
 
 type Bindings = {
   DB: D1Database;
@@ -19,7 +20,8 @@ app
     return c.json('Hello Hono!');
   })
   .route('/books', books)
-  .route('/users', users);
+  .route('/users', users)
+  .route('/backup', backup);
 
 export default app;
 // export type Apptype = typeof route

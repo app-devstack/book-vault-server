@@ -1,4 +1,17 @@
 import schema from '@/db/schema';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+
+export const userSelectSchema = createSelectSchema(schema.users);
+export const userInsertSchema = createInsertSchema(schema.users);
+
+export const seriesSelectSchema = createSelectSchema(schema.series);
+export const seriesInsertSchema = createInsertSchema(schema.series);
+
+export const shopSelectSchema = createSelectSchema(schema.shops);
+export const shopInsertSchema = createInsertSchema(schema.shops);
+
+export const bookSelectSchema = createSelectSchema(schema.books);
+export const bookInsertSchema = createInsertSchema(schema.books);
 
 export type Series = typeof schema.series.$inferSelect;
 export type NewSeries = typeof schema.series.$inferInsert;

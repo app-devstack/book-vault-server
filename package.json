@@ -18,9 +18,12 @@
     "dev:script": "tsx src/script/generateSeed.ts"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.1",
     "drizzle-orm": "^0.44.3",
+    "drizzle-zod": "^0.8.2",
     "eslint": "^9.31.0",
-    "hono": "^4.8.5"
+    "hono": "^4.8.5",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
