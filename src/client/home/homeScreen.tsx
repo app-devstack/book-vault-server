@@ -5,20 +5,17 @@ const app = new Hono();
 
 const Layout: FC = (props) => {
   return (
-    <html lang="ja"
-    >
-     <head>
-    <meta charset="UTF-8" />
+    <html lang="ja">
+      <head>
+        <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
-    <title>bv-server</title>
-  </head>
+        <title>bv-server</title>
+      </head>
       <body>{props.children}</body>
     </html>
   );
-
 };
-
 
 const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
   return (
@@ -31,7 +28,9 @@ const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
       </ul>
 
       <ul>
-        <li><a href="/api/books">books</a></li>
+        <li>
+          <a href="/api/books">books</a>
+        </li>
       </ul>
     </Layout>
   );
