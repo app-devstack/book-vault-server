@@ -1,8 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "book-vault-server",
+  "name": "bv-server",
   "main": "src/index.ts",
   "compatibility_date": "2025-07-16",
+  "assets": {
+    "directory": "public"
+    // "binding": "ASSETS"
+  },
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -25,7 +29,8 @@
     {
       "binding": "DB",
       "database_name": "bv-database",
-      "database_id": "2c8dd349-9dc9-4974-baed-bc5a6bf30d16"
+      "database_id": "2c8dd349-9dc9-4974-baed-bc5a6bf30d16",
+      "migrations_dir": "./packages/drizzle"
     }
   ]
   // "ai": {

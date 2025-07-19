@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/d1';
 
 /** The name of the database file to open. */
 
-const options = {
+export const options = {
   casing: 'snake_case' as const,
   schema: { ...schema },
   logger: true,

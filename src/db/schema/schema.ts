@@ -21,7 +21,8 @@ const _schemaBase = {
     .$defaultFn(() => new Date()),
 };
 
-export const user = sqliteTable('user', {
+// ユーザーマスタ
+export const users = sqliteTable('users', {
   ..._schemaBase,
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
