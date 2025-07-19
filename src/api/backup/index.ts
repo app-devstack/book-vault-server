@@ -13,6 +13,7 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 const backupSchema = z.object({
+  userId: z.string(),
   books: bookInsertSchema,
   series: seriesInsertSchema,
   shops: shopInsertSchema,
@@ -34,7 +35,14 @@ app
       const data = c.req.valid('json');
       const db = drizzle(c.env.DB, options);
 
-      const { books, series, shops } = data;
+      const { userId, books, series, shops } = data;
+
+      if (!userId) {
+        return c.json(
+          { success: false, error: 'Invalid data provided. `userId` is required.' },
+          400
+        );
+      }
 
       const mapping = [
         { table: schema.books, values: books },
