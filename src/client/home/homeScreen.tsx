@@ -18,6 +18,12 @@ const Layout: FC = (props) => {
 };
 
 const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
+  const routers = [
+    { path: '/api/books', label: 'Books' },
+    { path: '/api/users', label: 'Users' },
+    { path: '/api/backup', label: 'Backup' },
+  ];
+
   return (
     <Layout>
       <h1>Hello Hono!</h1>
@@ -28,9 +34,13 @@ const Top: FC<{ messages: string[] }> = (props: { messages: string[] }) => {
       </ul>
 
       <ul>
-        <li>
-          <a href="/api/books">books</a>
-        </li>
+        {routers.map((route) => {
+          return (
+            <li key={route.path}>
+              <a href={route.path}>{route.label}</a>
+            </li>
+          );
+        })}
       </ul>
     </Layout>
   );

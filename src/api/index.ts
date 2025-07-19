@@ -23,5 +23,5 @@ app
   .route('/users', users)
   .route('/backup', backup);
 
-export default app;
-// export type Apptype = typeof route
+export default app
+export type AppType= typeof app;
