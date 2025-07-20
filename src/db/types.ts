@@ -1,17 +1,28 @@
 import schema from '@/db/schema';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import z from 'zod';
 
 export const userSelectSchema = createSelectSchema(schema.users);
 export const userInsertSchema = createInsertSchema(schema.users);
 
 export const seriesSelectSchema = createSelectSchema(schema.series);
-export const seriesInsertSchema = createInsertSchema(schema.series);
+export const seriesInsertSchema = createInsertSchema(schema.series, {
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
 
 export const shopSelectSchema = createSelectSchema(schema.shops);
-export const shopInsertSchema = createInsertSchema(schema.shops);
+export const shopInsertSchema = createInsertSchema(schema.shops, {
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
 
 export const bookSelectSchema = createSelectSchema(schema.books);
-export const bookInsertSchema = createInsertSchema(schema.books);
+export const bookInsertSchema = createInsertSchema(schema.books, {
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  purchaseDate: z.coerce.date(),
+});
 
 export type Series = typeof schema.series.$inferSelect;
 export type NewSeries = typeof schema.series.$inferInsert;
