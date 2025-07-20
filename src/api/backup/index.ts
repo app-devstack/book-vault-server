@@ -14,10 +14,12 @@ const app = new Hono<{ Bindings: Bindings }>();
 
 const backupSchema = z.object({
   userId: z.string(),
-  books: bookInsertSchema,
-  series: seriesInsertSchema,
-  shops: shopInsertSchema,
+  books: bookInsertSchema.array().optional(),
+  series: seriesInsertSchema.array().optional(),
+  shops: shopInsertSchema.array().optional(),
 });
+
+type _BackupData = z.infer<typeof backupSchema>;
 
 app
   .get('/', async (c) => {
@@ -45,13 +47,14 @@ app
       }
 
       const mapping = [
-        { table: schema.books, values: books },
-        { table: schema.series, values: series },
-        { table: schema.shops, values: shops },
+        { table: schema.books, values: books || [] },
+        { table: schema.series, values: series || [] },
+        { table: schema.shops, values: shops || [] },
       ];
 
       await Promise.all(
         mapping.map(({ table, values }) => {
+          if (values.length === 0) return Promise.resolve();
           return db.insert(table).values(values);
         })
       );
