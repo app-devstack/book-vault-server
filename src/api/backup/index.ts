@@ -46,18 +46,11 @@ app
         );
       }
 
-      const mapping = [
-        { table: schema.books, values: books || [] },
-        { table: schema.series, values: series || [] },
-        { table: schema.shops, values: shops || [] },
-      ];
-
-      await Promise.all(
-        mapping.map(({ table, values }) => {
-          if (values.length === 0) return Promise.resolve();
-          return db.insert(table).values(values);
-        })
-      );
+      await db.transaction(async (tx) => {
+        await tx.insert(schema.series).values(series || []);
+        await tx.insert(schema.shops).values(shops || []);
+        await tx.insert(schema.books).values(books || []);
+      });
 
       // バックアップ処理のロジックをここに実装
       // const backup = {

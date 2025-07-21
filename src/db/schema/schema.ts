@@ -5,7 +5,7 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 const timestamp = (name: string) =>
   integer(name, { mode: 'timestamp_ms' })
     .notNull()
-    .$default(() => new Date());
+    .$defaultFn(() => new Date());
 
 // 共通のベーススキーマ
 const _schemaBase = {

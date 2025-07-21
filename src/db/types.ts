@@ -19,6 +19,7 @@ export const shopInsertSchema = createInsertSchema(schema.shops, {
 
 export const bookSelectSchema = createSelectSchema(schema.books);
 export const bookInsertSchema = createInsertSchema(schema.books, {
+  volume: z.coerce.number().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   purchaseDate: z.coerce.date(),
