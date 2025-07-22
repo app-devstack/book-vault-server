@@ -1,5 +1,5 @@
 import { options } from '@/db';
-import { drizzle } from 'drizzle-orm/d1';
+import { drizzle, DrizzleD1Database } from 'drizzle-orm/d1';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ const backupSchema = z.object({
   shops: shopInsertSchema.array().optional(),
 });
 
-type _BackupData = z.infer<typeof backupSchema>;
+type BackupData = z.infer<typeof backupSchema>;
 
 app
   .get('/', async (c) => {
@@ -34,10 +34,14 @@ app
   })
   .post('/', zValidator('json', backupSchema), async (c) => {
     try {
+      console.log('`/api/backup`にアクセスしました｡');
+
       const data = c.req.valid('json');
       const db = drizzle(c.env.DB, options);
 
-      const { userId, books, series, shops } = data;
+      console.log('受け取ったデータ:', data);
+
+      const { userId, books = [], series = [], shops = [] } = data;
 
       if (!userId) {
         return c.json(
@@ -46,21 +50,28 @@ app
         );
       }
 
-      await db.transaction(async (tx) => {
-        await tx.insert(schema.series).values(series || []);
-        await tx.insert(schema.shops).values(shops || []);
-        await tx.insert(schema.books).values(books || []);
-      });
+      /*
+        D1でトランザクションは使えないらしい。
+        ``` ts
+          db.batch([
+            db.insert(schema.series).values(series),
+            db.insert(schema.shops).values(shops),
+            db.insert(schema.books).values(books),
+          ])
+        ```
+        みたいな感じでできるらしい。
+       */
 
-      // バックアップ処理のロジックをここに実装
-      // const backup = {
-      //   id: crypto.randomUUID(),
-      //   name: data.name,
-      //   description: data.description || '',
-      //   type: data.type,
-      //   timestamp: data.timestamp || new Date().toISOString(),
-      //   status: 'created',
-      // };
+      // await db.insert(schema.series).values(series);
+      await insertSeries(db, series);
+      console.log('シリーズの登録完了');
+
+      await insertShops(db, shops);
+      // await db.insert(schema.shops).values(shops);
+      console.log('ショップの登録完了');
+
+      await insertBooks(db, books);
+      console.log('全てのデータの登録が完了しました｡');
 
       return c.json({
         success: true,
@@ -68,6 +79,7 @@ app
         data: data,
       });
     } catch (error) {
+      console.error(error + '');
       return c.json(
         {
           success: false,
@@ -80,23 +92,58 @@ app
 
 export default app;
 
-/*
+const insertSeries = async (db: DrizzleD1Database<typeof schema>, series: BackupData['series']) => {
+  if (!series || series.length === 0) return;
+  for (const serie of series) {
+    await db
+      .insert(schema.series)
+      .values(serie)
+      .onConflictDoUpdate({
+        target: schema.series.id,
+        set: { ...serie },
+      });
+    console.log(`シリーズの登録完了: ${serie.title}`);
+  }
+};
 
-import * as z from 'zod'
-import { zValidator } from '@hono/zod-validator'
+const insertShops = async (db: DrizzleD1Database<typeof schema>, shops: BackupData['shops']) => {
+  if (!shops || shops.length === 0) return;
+  for (const shop of shops) {
+    await db
+      .insert(schema.shops)
+      .values(shop)
+      .onConflictDoUpdate({
+        target: schema.shops.id,
+        set: { ...shop },
+      });
+    console.log(`ショップの登録完了: ${shop.name}`);
+  }
+};
 
-const schema = z.object({
-  name: z.string(),
-  age: z.number(),
-})
+const insertBooks = async (db: DrizzleD1Database<typeof schema>, books: BackupData['books']) => {
+  if (!books || books.length === 0) return;
 
-app.post('/author', zValidator('json', schema), (c) => {
-  const data = c.req.valid('json')
-  return c.json({
-    success: true,
-    message: `${data.name} is ${data.age}`,
-  })
-})
+  for (const book of books) {
+    const seriesId = book.seriesId;
 
+    const seriesExists = await db.query.series.findFirst({
+      where: (series, { eq }) => eq(series.id, seriesId),
+    });
 
-*/
+    if (!seriesExists) {
+      console.error(`Series with ID ${seriesId} does not exist.`);
+      continue;
+    }
+
+    const { id, ...updateData } = book;
+
+    await db
+      .insert(schema.books)
+      .values(book)
+      .onConflictDoUpdate({
+        target: schema.books.id,
+        set: { ...updateData },
+      });
+    console.log(`本の登録完了: ${book.title}`);
+  }
+};
