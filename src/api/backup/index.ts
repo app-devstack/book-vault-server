@@ -5,6 +5,7 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { bookInsertSchema, seriesInsertSchema, shopInsertSchema } from '@/db/types';
 import schema from '@/db/schema';
+import { ExtractTableRelationsFromSchema } from 'drizzle-orm';
 
 type Bindings = {
   DB: D1Database;
@@ -26,7 +27,20 @@ app
     try {
       const db = drizzle(c.env.DB, options);
 
-      const data = await db.query.books.findMany();
+      const [users, books, series, shops] = await db.batch([
+        db.query.users.findMany(),
+        db.query.books.findMany(),
+        db.query.series.findMany(),
+        db.query.shops.findMany(),
+      ]);
+
+      const data = {
+        users: users,
+        books: books,
+        series: series,
+        shops: shops,
+      };
+
       return c.json({ data: data });
     } catch (error) {
       return c.json({ error: error + '' }, 500);
