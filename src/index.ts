@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import client from './client';
+import client from './client/router';
 import api from './api';
 
 const app = new Hono();
