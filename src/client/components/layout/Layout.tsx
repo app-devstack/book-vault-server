@@ -9,6 +9,7 @@ export const Layout: FC = (props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="/favicon.ico" />
         <title>bv-server</title>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <Style />
       </head>
       <body>{props.children}</body>

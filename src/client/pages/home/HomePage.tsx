@@ -19,7 +19,7 @@ export default async function HomePage(props: { messages: string[]; DB: D1Databa
     <Layout>
       <h1>Book Vault!</h1>
 
-      <div className="">
+      <div className="mx-2 my-8">
         <h2>Series List</h2>
         {series.map((s) => (
           <Series key={s.id} {...s} />
@@ -37,13 +37,13 @@ const headerClass = css`
 
 const Series = (series: SeriesWithBooks) => {
   return (
-    <div>
+    <div className="">
       <h2 class={headerClass}>{series.title}</h2>
 
       {series.books.length > 0 ? (
-        <ul>
+        <ul class="list-disc pl-5 grid gap-2">
           {series.books.map((book) => (
-            <li key={book.id}>
+            <li key={book.id} class="">
               <a href={book.targetUrl}>{book.title}</a>
             </li>
           ))}
