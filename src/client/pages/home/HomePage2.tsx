@@ -12,8 +12,8 @@ export default async function HomePage2(props: { messages: string[]; DB: D1Datab
     <Layout>
       <div className="min-h-screen bg-slate-50">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-          <div className="container mx-auto px-6 py-12">
+        <div className="bg-gradient-to-r bg-[#466fc9] text-white">
+          <div className="container mx-auto px-6 py-8">
             <h1 className="text-4xl font-bold mb-2">Book Vault</h1>
           </div>
         </div>
@@ -45,9 +45,9 @@ const SeriesCard = (series: SeriesWithBooks) => {
   return (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-slate-200">
       {/* Series Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-        <div className="flex items-start gap-4">
-          {series.thumbnail ? (
+      <div className="bg-gradient-to-r bg-[#466fc9] text-white p-4">
+        <div className="grid gap-1">
+          {/* {series.thumbnail ? (
             <img
               src={series.thumbnail}
               alt={series.title}
@@ -57,21 +57,19 @@ const SeriesCard = (series: SeriesWithBooks) => {
             <div className="w-16 h-20 bg-white/20 rounded-lg flex items-center justify-center">
               <span className="text-2xl">📖</span>
             </div>
-          )}
-          <div className="flex-1">
-            <h2 className="text-xl font-bold mb-1 line-clamp-2">{series.title}</h2>
-            {series.author && <p className="text-blue-100 text-sm mb-2">{series.author}</p>}
+          )} */}
+            <h2 className="text-xl font-bold line-clamp-2">{series.title}</h2>
+            {series.author && <p className="text-blue-100 text-sm">{series.author}</p>}
             <div className="flex items-center gap-2 text-sm text-blue-100">
-              <span className="bg-white/20 px-2 py-1 rounded-full">{series.books.length}冊</span>
+              <span className="bg-white/20 px-2 py-1 rounded-full text-sm">{series.books.length}冊</span>
             </div>
-          </div>
         </div>
       </div>
 
       {/* Books List */}
-      <div className="p-6">
+      <div className="p-2">
         {series.books.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {series.books
               .sort((a, b) => (a.volume || 0) - (b.volume || 0))
               .map((book) => (
